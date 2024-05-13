@@ -1,0 +1,21 @@
+{
+  "name": "social-mediator",
+  "version": "1.0.0",
+  "description": "Omni-channel message queueing service for social messaging platforms",
+  "main": "index.js",
+  "type": "module",
+  "repository": "git@github.com:wynsome-apps/social-mediator.git",
+  "author": "wynsome-apps",
+  "license": "MIT",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "start": "node --env-file=.env index.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}
