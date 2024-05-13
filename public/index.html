@@ -44,6 +44,8 @@
       <h1>Firebase Hosting Setup Complete</h1>
       <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
       <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+
+      <button type="button" onclick="initWebSocket()">Init WebSocket</button>
     </div>
     <p id="load">Firebase SDK Loading&hellip;</p>
 
@@ -85,5 +87,20 @@
         }
       });
     </script>
+  <script>
+    function initWebSocket() {
+      // var exampleSocket = new WebSocket('wss://websockettest-c73eidiq7a-uc.a.run.app');
+      var exampleSocket = new WebSocket('wss://127.0.0.1:5001/social-mediator/us-central1/websocketTest');
+      exampleSocket.onopen = (event) => {
+        exampleSocket.send("Here's some text that the server is urgently awaiting!");
+      };
+      exampleSocket.onmessage = (event) => {
+        console.log(event.data);
+      };
+      exampleSocket.onerror = (event) => {
+        console.error(event);
+      };
+    }
+  </script>
   </body>
 </html>

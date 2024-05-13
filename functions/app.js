@@ -9,9 +9,7 @@
 
 const express = require('express');
 const {addUser, getUser, deleteUser} = require('./users');
-const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
-const {WebSocketServer} = require("ws");
 
 const app = express();
 app.use(express.static(__dirname + '/public'));
@@ -99,4 +97,4 @@ io.on('connection', socket => {
 });
 // [END cloudrun_websockets_server]
 
-exports.app = onRequest({cors:true}, server);
+module.exports = server;

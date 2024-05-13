@@ -25,7 +25,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/Shared/Projects/social-mediator&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/Shared/Projects/social-mediator/functions&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -35,6 +35,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/functions" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -68,7 +73,8 @@
       <option name="presentableId" value="Default" />
       <updated>1715264309555</updated>
       <workItem from="1715264310955" duration="990000" />
-      <workItem from="1715266198394" duration="143000" />
+      <workItem from="1715266198394" duration="7345000" />
+      <workItem from="1715596146013" duration="1012000" />
     </task>
     <servers />
   </component>
