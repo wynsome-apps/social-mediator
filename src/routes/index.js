@@ -1,6 +1,5 @@
 import express from 'express';
 import apiRouter from './api/index.js';
-import app from "../app.js";
 
 const router = express.Router();
 
@@ -11,6 +10,6 @@ router.get('/', (req, res) => {
 });
 router.get('/demo', (req, res) => {
   res.render('demo');
-})
+});
 
 export default router;

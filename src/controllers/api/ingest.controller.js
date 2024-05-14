@@ -20,8 +20,9 @@ export function post(req, res, next) {
     });
   }
   res.json(req.body);
-};
+  next();
+}
 
- export default {
-   post,
- };
+export default {
+  post,
+};

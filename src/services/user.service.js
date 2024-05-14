@@ -20,7 +20,7 @@ export function addUser(id, name, room) {
   if (!name && !room) return new Error('Username and room are required');
   if (!name) return new Error('Username is required');
   if (!room) return new Error('Room is required');
-  users.set(id, {user: name, room});
+  users.set(id, { user: name, room });
 }
 
 // Return user's name and chat room from socket ID

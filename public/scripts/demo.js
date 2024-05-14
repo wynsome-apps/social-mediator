@@ -1,3 +1,4 @@
+/* global $, mdc, io */
 // Copyright 2021 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,12 +36,12 @@ const socket = io('', {
 let user;
 let room;
 // Submit signin form
-$('#signin').submit(e => {
+$('#signin').submit((e) => {
   e.preventDefault();
   user = $('#name').val();
   room = $('#platform').val() + '--' + $('#userId').val();
   // Emit "signin" event with user name and chat room
-  socket.emit('signin', {user, room}, (error, history) => {
+  socket.emit('signin', { user, room }, (error, history) => {
     if (error) {
       console.error(error);
     } else {
@@ -56,12 +57,12 @@ $('#signin').submit(e => {
 });
 
 // Submit chat message
-$('#chat').submit(e => {
+$('#chat').submit((e) => {
   e.preventDefault();
   const msg = $('#msg').val();
   // [START cloudrun_websockets_emit]
   // Emit "sendMessage" event with message
-  socket.emit('sendMessage', msg, error => {
+  socket.emit('sendMessage', msg, (error) => {
     if (error) {
       console.error(error);
     } else {
@@ -74,12 +75,12 @@ $('#chat').submit(e => {
 
 // [START cloudrun_websockets_listen]
 // Listen for new messages
-socket.on('message', msg => {
+socket.on('message', (msg) => {
   log(msg.user, msg.text);
 });
 
 // Listen for notifications
-socket.on('notification', msg => {
+socket.on('notification', (msg) => {
   log(msg.title, msg.description);
 });
 
@@ -90,7 +91,7 @@ socket.on('connect', () => {
 // [END cloudrun_websockets_listen]
 
 // Listen for disconnect event
-socket.on('disconnect', err => {
+socket.on('disconnect', (err) => {
   console.log('server disconnected: ', err);
   if (err === 'io server disconnect') {
     // Reconnect manually if the disconnection was initiated by the server
@@ -103,14 +104,15 @@ socket.on('disconnect', err => {
 socket.io.on('reconnect', () => {
   console.log('reconnected');
   // Emit "updateSocketId" event to update the recorded socket ID with user and room
-  socket.emit('updateSocketId', {user, room}, error => {
+  socket.emit('updateSocketId', { user, room }, (error) => {
     if (error) {
       console.error(error);
     }
   });
 });
 
-socket.on("connect_error", (err) => { // the reason of the error, for example "xhr poll error"
+socket.on('connect_error', (err) => {
+  // the reason of the error, for example "xhr poll error"
   console.log(err.message);
 
   // some additional description, for example the status code of the initial HTTP response
@@ -123,7 +125,7 @@ socket.on("connect_error", (err) => { // the reason of the error, for example "x
 
 // Add message history in chat room
 function addHistory(messages) {
-  messages.forEach(message => {
+  messages.forEach((message) => {
     log(message.user, message.text);
   });
 }
