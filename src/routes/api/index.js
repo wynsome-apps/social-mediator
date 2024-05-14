@@ -3,7 +3,7 @@ import express from 'express';
 const router = express.Router();
 router.use(express.json()) // for parsing application/json
 
-router.post('/ingest', function (req, res, next) {
+function ingestHandler (req, res, next) {
   // console.log(req.body);
   let platform = req.params?.platform || req.query?.platform;
   let userId = req.body?.sender?.id;
@@ -25,6 +25,9 @@ router.post('/ingest', function (req, res, next) {
     });
   }
   res.json(req.body);
-});
+};
+
+router.post('/ingest', ingestHandler);
+router.post('/ingest/:platform', ingestHandler);
 
 export default router;
