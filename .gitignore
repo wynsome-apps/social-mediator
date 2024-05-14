@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 # misc
+.idea
 .DS_Store

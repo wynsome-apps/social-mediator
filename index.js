@@ -1,12 +1,15 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
-import app from './app.js';
+import app from './src/app.js';
 import {addUser, getUser, deleteUser} from './app/users.js';
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, { /* options */ });
 
+app.locals.io = io;
 io.on("connection", (socket) => {
+  app.locals.socket = socket;
+
   // Add listener for "signin" event
   socket.on('signin', async ({user, room}, callback) => {
     try {

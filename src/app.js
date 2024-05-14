@@ -1,14 +1,11 @@
 import express from "express";
+import router from './routes/index.js';
 
 const app = express();
 app.set('view engine', 'ejs');
+app.set('views', process.cwd() + '/src/views');
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
-  res.render('index');
-});
-app.get('/demo', (req, res) => {
-  res.render('demo');
-})
+app.use('/', router);
 
 export default app;

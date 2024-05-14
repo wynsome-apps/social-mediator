@@ -14,7 +14,8 @@
 
 // Material Design functionality
 mdc.textField.MDCTextField.attachTo(document.querySelector('.name'));
-mdc.textField.MDCTextField.attachTo(document.querySelector('.room'));
+mdc.textField.MDCTextField.attachTo(document.querySelector('.platform'));
+mdc.textField.MDCTextField.attachTo(document.querySelector('.userId'));
 mdc.ripple.MDCRipple.attachTo(document.querySelector('.signin'));
 mdc.ripple.MDCRipple.attachTo(document.querySelector('.send'));
 
@@ -37,7 +38,7 @@ let room;
 $('#signin').submit(e => {
   e.preventDefault();
   user = $('#name').val();
-  room = $('#room').val();
+  room = $('#platform').val() + '--' + $('#userId').val();
   // Emit "signin" event with user name and chat room
   socket.emit('signin', {user, room}, (error, history) => {
     if (error) {

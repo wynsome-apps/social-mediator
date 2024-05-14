@@ -24,6 +24,8 @@ body {
 }
 
 .name,
+.platform,
+.userId,
 .room {
     display: flex;
     width: 300px;
