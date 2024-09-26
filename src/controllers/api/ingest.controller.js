@@ -1,6 +1,7 @@
 import facebookService from '../../services/facebook.service.js';
 
 export async function post(req, res, next) {
+  console.log('Ingesting message:', req);
   let platform = req.params?.platform || req.query?.platform;
   let userId = req.body?.sender?.id;
 
