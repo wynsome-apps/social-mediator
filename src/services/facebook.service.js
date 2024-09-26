@@ -18,9 +18,11 @@ export async function handleFacebookMessage(body) {
           console.log('WEBHOOK_VERIFIED');
           resolve({ status: 200, message: challenge });
         } else {
+          console.log('Webhook verification failed');
           resolve({ status: 403, message: 'Forbidden' });
         }
       } else {
+        console.log('Webhook mode or token not set');
         reject({ status: 403, message: 'Forbidden' });
       }
     });
