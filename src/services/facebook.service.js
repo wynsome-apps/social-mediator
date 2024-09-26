@@ -1,16 +1,16 @@
 // import axios from 'axios';
 
-export async function handleFacebookMessage(body) {
+export async function handleFacebookMessage(req) {
   console.log('Handling Facebook message:');
-
-  if (body.query && body.query['hub.mode'] === 'subscribe') {
+  const body = req.body;
+  if (req.query && req.query['hub.mode'] === 'subscribe') {
     console.log('Verifying Facebook webhook');
     // FB Webhook Verification
     const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 
-    const mode = body.query['hub.mode'];
-    const token = body.query['hub.verify_token'];
-    const challenge = body.query['hub.challenge'];
+    const mode = req.query['hub.mode'];
+    const token = req.query['hub.verify_token'];
+    const challenge = req.query['hub.challenge'];
 
     return new Promise((resolve, reject) => {
       if (mode && token) {
