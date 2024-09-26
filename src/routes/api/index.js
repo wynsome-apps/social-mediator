@@ -6,5 +6,6 @@ router.use(express.json()); // for parsing application/json
 
 router.post('/ingest', ingestController.post);
 router.post('/ingest/:platform', ingestController.post);
+router.post('/ingest/facebook', ingestController.post);
 
 export default router;
