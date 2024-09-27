@@ -10,9 +10,16 @@ export async function handleFacebookMessage(req) {
       const event = entry.messaging ? entry.messaging[0] : null;
 
       if (event && event.message) {
-        // const pageId = event.recipient.id;
-        // const senderId = event.sender.id;
-        // const messageText = event.message.text;
+        console.log('this is the event from FB:', event);
+
+        const recipientPageId = event.recipient.id;
+        const timeOfEvent = event.timestamp;
+        const senderId = event.sender.id;
+        const messageText = event.message.text;
+
+        console.log(
+          `Received message from senderId: ${senderId} at pageId: ${recipientPageId} at time: ${timeOfEvent} with message: ${messageText}`
+        );
 
         return new Promise((resolve, reject) => {
           const success = true; // Replace with actual logic
