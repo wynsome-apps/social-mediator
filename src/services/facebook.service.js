@@ -46,14 +46,12 @@ export async function handleFacebookMessage(req) {
 
         const compiledMessage = await prepareMessageForDiscipleTools(
           senderId,
+          recipientPageId,
           messageText,
           timeOfEvent
         );
 
-        const response = await sendToDiscipleTools(
-          recipientPageId,
-          compiledMessage
-        );
+        const response = await sendToDiscipleTools(compiledMessage);
 
         console.log('Response from Disciple.Tools:', response);
 
@@ -87,6 +85,7 @@ export async function getSenderProfile(senderId) {
 
 export async function prepareMessageForDiscipleTools(
   senderId,
+  recipientPageId,
   messageText,
   timeOfEvent
 ) {
@@ -95,6 +94,7 @@ export async function prepareMessageForDiscipleTools(
     userProfile.data;
   const message = {
     senderId,
+    recipientPageId,
     first_name,
     last_name,
     profile_pic,
@@ -108,16 +108,19 @@ export async function prepareMessageForDiscipleTools(
   return message;
 }
 
-export async function sendToDiscipleTools(recipientPageId, message) {
+export async function sendToDiscipleTools(message) {
   //an array for to map an pageid to a dt endpoint. This will eventually be a database lookup.
   const DTEndpointList = {
     1487685951308946:
-      'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
+      'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
   };
 
-  let endpoint = DTEndpointList[recipientPageId];
+  let endpoint = DTEndpointList[message.recipientPageId];
   if (!endpoint) {
-    console.error('No endpoint found for recipient page ID:', recipientPageId);
+    console.error(
+      'No endpoint found for recipient page ID:',
+      message.recipientPageId
+    );
     return;
   }
   try {
