@@ -40,6 +40,7 @@ export async function handleFacebookMessage(req) {
 
       if (event && event.message) {
         const recipientPageId = event.recipient.id;
+        const platform = event.platform;
         const timeOfEvent = event.timestamp;
         const senderId = event.sender.id;
         const messageText = event.message.text;
@@ -47,6 +48,7 @@ export async function handleFacebookMessage(req) {
         const compiledMessage = await prepareMessageForDiscipleTools(
           senderId,
           recipientPageId,
+          platform,
           messageText,
           timeOfEvent
         );
@@ -86,6 +88,7 @@ export async function getSenderProfile(senderId) {
 export async function prepareMessageForDiscipleTools(
   senderId,
   recipientPageId,
+  platform,
   messageText,
   timeOfEvent
 ) {
@@ -95,6 +98,7 @@ export async function prepareMessageForDiscipleTools(
   const message = {
     senderId,
     recipientPageId,
+    platform,
     first_name,
     last_name,
     profile_pic,
@@ -102,7 +106,6 @@ export async function prepareMessageForDiscipleTools(
     timezone,
     messageText,
     timeOfEvent,
-    platform: 'facebook',
   };
 
   return message;
@@ -113,6 +116,7 @@ export async function sendToDiscipleTools(message) {
   const DTEndpointList = {
     1487685951308946:
       'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
+    // 1487685951308946: 'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation'
   };
 
   let endpoint = DTEndpointList[message.recipientPageId];
@@ -139,9 +143,41 @@ export async function sendToDiscipleTools(message) {
   }
 }
 
+export async function sendToFacebook(request) {
+  // Process the response from Disciple Tools
+  console.log('Received response from Disciple Tools:', request);
+
+  // Send a response to the user on Facebook using the Facebook Send API
+  const messageData = {
+    recipient: {
+      id: request.recipientID,
+    },
+    message: {
+      text: request.message,
+    },
+  };
+
+  console.log(messageData);
+
+  // Send the message to the Facebook Send API
+  const response = await axios.post(
+    `https://graph.facebook.com/v20.0/me/messages?access_token=${process.env.FB_PAGE_ACCESS_TOKEN}`,
+    messageData
+  );
+
+  console.log('Response from Facebook:', response.data);
+
+  return {
+    status: 200,
+    message: 'Response processed successfully',
+  };
+}
+
 export default {
   verifyWebhook,
   handleFacebookMessage,
   getSenderProfile,
   prepareMessageForDiscipleTools,
+  sendToDiscipleTools,
+  sendToFacebook,
 };
