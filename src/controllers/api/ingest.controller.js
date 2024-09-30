@@ -13,7 +13,6 @@ export async function post(req, res, next) {
     if (platform === 'facebook') {
       try {
         const result = await facebookService.handleFacebookMessage(req);
-        console.log('results from facebookService', result);
         return res.status(result.status).json({ message: result.message });
       } catch (error) {
         console.error(error);

@@ -1,4 +1,10 @@
 import axios from 'axios';
+import https from 'https';
+
+// THIS IS FOR TESTING TODO: REMOVE IN PRODUCTION: Create an HTTPS agent that ignores SSL certificate validation
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 //function needed to verify the webhook by facebook. This is called by the GET request to the /ingest/facebook endpoint
 export async function verifyWebhook(req) {
@@ -38,16 +44,18 @@ export async function handleFacebookMessage(req) {
         const senderId = event.sender.id;
         const messageText = event.message.text;
 
-        console.log(
-          `Received message from senderId: ${senderId} at pageId: ${recipientPageId} at time: ${timeOfEvent} with message: ${messageText}`
-        );
-
         const compiledMessage = await prepareMessageForDiscipleTools(
           senderId,
-          messageText
+          messageText,
+          timeOfEvent
         );
 
-        console.log('Compiled message:', compiledMessage);
+        const response = await sendToDiscipleTools(
+          recipientPageId,
+          compiledMessage
+        );
+
+        console.log('Response from Disciple.Tools:', response);
 
         return new Promise((resolve, reject) => {
           let success = true;
@@ -73,11 +81,15 @@ export async function handleFacebookMessage(req) {
 
 export async function getSenderProfile(senderId) {
   const FBurl = `https://graph.facebook.com/v20.0/${senderId}?fields=first_name,last_name,profile_pic,locale,timezone&access_token=${process.env.FB_PAGE_ACCESS_TOKEN}`;
-  console.log('FBurl:', FBurl);
+
   return await axios.get(FBurl);
 }
 
-export async function prepareMessageForDiscipleTools(senderId, messageText) {
+export async function prepareMessageForDiscipleTools(
+  senderId,
+  messageText,
+  timeOfEvent
+) {
   const userProfile = await getSenderProfile(senderId);
   const { first_name, last_name, profile_pic, locale, timezone } =
     userProfile.data;
@@ -89,9 +101,39 @@ export async function prepareMessageForDiscipleTools(senderId, messageText) {
     locale,
     timezone,
     messageText,
+    timeOfEvent,
+    platform: 'facebook',
   };
 
   return message;
+}
+
+export async function sendToDiscipleTools(recipientPageId, message) {
+  //an array for to map an pageid to a dt endpoint. This will eventually be a database lookup.
+  const DTEndpointList = {
+    1487685951308946:
+      'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
+  };
+
+  let endpoint = DTEndpointList[recipientPageId];
+  if (!endpoint) {
+    console.error('No endpoint found for recipient page ID:', recipientPageId);
+    return;
+  }
+  try {
+    const response = await axios.post(endpoint, message, { httpsAgent });
+    return {
+      status: response.status,
+      message: 'Message forwarded successfully',
+    };
+  } catch (error) {
+    console.error('Error forwarding message to Disciple.Tools:', error);
+    return {
+      status: 500,
+      message: 'Error forwarding message to Disciple.Tools',
+      error: error.message,
+    };
+  }
 }
 
 export default {
