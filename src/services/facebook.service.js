@@ -31,7 +31,7 @@ export async function verifyWebhook(req) {
 }
 
 //function to handle the incoming message from Facebook. This is called by the POST request to the /ingest/facebook endpoint
-export async function handleFacebookMessage(req) {
+export async function handleFacebookMessage(req, platform) {
   const body = req.body;
   // Handle messages
   if (body.object === 'page') {
@@ -40,11 +40,9 @@ export async function handleFacebookMessage(req) {
 
       if (event && event.message) {
         const recipientPageId = event.recipient.id;
-        const platform = event.platform;
         const timeOfEvent = event.timestamp;
         const senderId = event.sender.id;
         const messageText = event.message.text;
-
         const compiledMessage = await prepareMessageForDiscipleTools(
           senderId,
           recipientPageId,
@@ -55,10 +53,8 @@ export async function handleFacebookMessage(req) {
 
         const response = await sendToDiscipleTools(compiledMessage);
 
-        console.log('Response from Disciple.Tools:', response);
-
         return new Promise((resolve, reject) => {
-          let success = true;
+          let success = response.status === 200;
           if (!compiledMessage) {
             success = false;
           }
@@ -114,9 +110,10 @@ export async function prepareMessageForDiscipleTools(
 export async function sendToDiscipleTools(message) {
   //an array for to map an pageid to a dt endpoint. This will eventually be a database lookup.
   const DTEndpointList = {
+    // 1487685951308946:
+    //   'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
     1487685951308946:
-      'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
-    // 1487685951308946: 'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation'
+      'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
   };
 
   let endpoint = DTEndpointList[message.recipientPageId];
@@ -128,6 +125,7 @@ export async function sendToDiscipleTools(message) {
     return;
   }
   try {
+    console.log('Forwarding message to Disciple.Tools:', message);
     const response = await axios.post(endpoint, message, { httpsAgent });
     return {
       status: response.status,

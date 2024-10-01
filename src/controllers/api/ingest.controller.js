@@ -12,7 +12,10 @@ export async function post(req, res, next) {
 
     if (platform === 'facebook') {
       try {
-        const result = await facebookService.handleFacebookMessage(req);
+        const result = await facebookService.handleFacebookMessage(
+          req,
+          platform
+        );
         return res.status(result.status).json({ message: result.message });
       } catch (error) {
         console.error(error);
