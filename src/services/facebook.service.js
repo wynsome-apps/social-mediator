@@ -110,10 +110,10 @@ export async function prepareMessageForDiscipleTools(
 export async function sendToDiscipleTools(message) {
   //an array for to map an pageid to a dt endpoint. This will eventually be a database lookup.
   const DTEndpointList = {
-    // 1487685951308946:
-    //   'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
     1487685951308946:
-      'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
+      'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
+    // 1487685951308946:
+    //   'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
   };
 
   let endpoint = DTEndpointList[message.recipientPageId];
