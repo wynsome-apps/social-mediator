@@ -1,10 +1,5 @@
 import axios from 'axios';
-import https from 'https';
-
-// THIS IS FOR TESTING TODO: REMOVE IN PRODUCTION: Create an HTTPS agent that ignores SSL certificate validation
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
-});
+import { sendToDiscipleTools } from './discipletools.service.js';
 
 //function needed to verify the webhook by facebook. This is called by the GET request to the /ingest/facebook endpoint
 export async function verifyWebhook(req) {
@@ -52,7 +47,6 @@ export async function handleFacebookMessage(req, platform) {
         );
 
         const response = await sendToDiscipleTools(compiledMessage);
-
         return new Promise((resolve, reject) => {
           let success = response.status === 200;
           if (!compiledMessage) {
@@ -107,44 +101,8 @@ export async function prepareMessageForDiscipleTools(
   return message;
 }
 
-export async function sendToDiscipleTools(message) {
-  //an array for to map an pageid to a dt endpoint. This will eventually be a database lookup.
-  const DTEndpointList = {
-    1487685951308946:
-      'https://conversations.gospelambition.com/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
-    // 1487685951308946:
-    //   'https://dt.local/wp-json/dt-public/disciple_tools_conversations/v1/incoming_conversation',
-  };
-
-  let endpoint = DTEndpointList[message.recipientPageId];
-  if (!endpoint) {
-    console.error(
-      'No endpoint found for recipient page ID:',
-      message.recipientPageId
-    );
-    return;
-  }
-  try {
-    console.log('Forwarding message to Disciple.Tools:', message);
-    const response = await axios.post(endpoint, message, { httpsAgent });
-    return {
-      status: response.status,
-      message: 'Message forwarded successfully',
-    };
-  } catch (error) {
-    console.error('Error forwarding message to Disciple.Tools:', error);
-    return {
-      status: 500,
-      message: 'Error forwarding message to Disciple.Tools',
-      error: error.message,
-    };
-  }
-}
-
 export async function sendToFacebook(request) {
   // Process the response from Disciple Tools
-  console.log('Received response from Disciple Tools:', request);
-
   // Send a response to the user on Facebook using the Facebook Send API
   const messageData = {
     recipient: {
@@ -176,6 +134,5 @@ export default {
   handleFacebookMessage,
   getSenderProfile,
   prepareMessageForDiscipleTools,
-  sendToDiscipleTools,
   sendToFacebook,
 };

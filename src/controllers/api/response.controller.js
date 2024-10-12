@@ -4,7 +4,7 @@ export async function handleDiscipleToolsResponse(req, res) {
   if (!req.body) {
     return res.status(400).json({ message: 'No body provided' });
   }
-  console.log(req.body);
+
   if (req.body.platform === 'facebook') {
     try {
       const result = await facebookService.sendToFacebook(req.body);
