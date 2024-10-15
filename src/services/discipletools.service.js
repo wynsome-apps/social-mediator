@@ -2,6 +2,7 @@ import axios from 'axios';
 import https from 'https';
 
 export async function sendToDiscipleTools(message) {
+  console.log('sendToDiscipleTools');
   //an array for to map an pageid to a dt endpoint. This will eventually be a database lookup.
   const DTEndpointList = {
     // 1487685951308946: {
@@ -25,7 +26,6 @@ export async function sendToDiscipleTools(message) {
     );
     return;
   }
-  console.log('Forwarding message to Disciple.Tools:', message);
 
   let options = {
     method: 'POST',
@@ -42,7 +42,6 @@ export async function sendToDiscipleTools(message) {
 
   try {
     const response = await axios(options);
-    console.log(response.status);
     if (response.status === 200) {
       return response;
     } else {

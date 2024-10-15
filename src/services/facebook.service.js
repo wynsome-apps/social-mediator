@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sendToDiscipleTools } from './discipletools.service.js';
+import { addToInboundMQ } from './messagequeue.service.js';
 
 //function needed to verify the webhook by facebook. This is called by the GET request to the /ingest/facebook endpoint
 export async function verifyWebhook(req) {
@@ -46,24 +46,21 @@ export async function handleFacebookMessage(req, platform) {
           timeOfEvent
         );
 
-        const response = await sendToDiscipleTools(compiledMessage);
+        const response = await addToInboundMQ(compiledMessage);
+        console.log(`sendToMQ response: ${response}`);
+
         return new Promise((resolve, reject) => {
-          let success = response.status === 200;
+          let success = response;
           if (!compiledMessage) {
             success = false;
           }
           if (success) {
-            console.log('Message processed successfully');
+            console.log('Message successfully added to queue');
             resolve({ status: 200, message: 'Message processed successfully' });
           } else {
             reject({ status: 500, message: 'Failed to process message' });
           }
         });
-
-        //Next Steps:
-        // Send it to DT API and wait for response
-
-        // On response from DT API, send socket.io message to client
       }
     }
   }
@@ -85,6 +82,13 @@ export async function prepareMessageForDiscipleTools(
   const userProfile = await getSenderProfile(senderId);
   const { first_name, last_name, profile_pic, locale, timezone } =
     userProfile.data;
+
+  // let first_name = "Micah ";
+  // let last_name = "Mills";
+  // let profile_pic = "test.com/pic";
+  // let locale = "en";
+  // let timezone = "UTC+3";
+
   const message = {
     senderId,
     recipientPageId,
