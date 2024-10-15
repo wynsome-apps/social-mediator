@@ -1,4 +1,4 @@
-import facebookService from '../../services/facebook.service.js';
+import { addToOutboundMQ } from '../../services/messagequeue.service.js';
 
 export async function handleDiscipleToolsResponse(req, res) {
   if (!req.body) {
@@ -7,8 +7,15 @@ export async function handleDiscipleToolsResponse(req, res) {
 
   if (req.body.platform === 'facebook') {
     try {
-      const result = await facebookService.sendToFacebook(req.body);
-      return res.status(result.status).json({ message: result.message });
+      const result = await addToOutboundMQ(req.body);
+
+      if (result) {
+        return res
+          .status(200)
+          .json({ message: 'Message processed successfully' });
+      } else {
+        return res.status(500).json({ message: 'Message Not Processed' });
+      }
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal Server Error' });
