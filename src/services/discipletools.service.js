@@ -1,5 +1,6 @@
 import axios from 'axios';
 import https from 'https';
+import app from '../app.js';
 
 export async function sendToDiscipleTools(message) {
   console.log('sendToDiscipleTools');
@@ -43,6 +44,15 @@ export async function sendToDiscipleTools(message) {
   try {
     const response = await axios(options);
     if (response.status === 200) {
+      //emit the message to the socket.io server
+      const io = app.locals.io;
+      const room = `${message.recipientPageId}-${message.senderId}`;
+
+      console.log('Emitting message to room:', room);
+
+      io.to(room).emit('message', 'new message to download');
+      io.emit('message');
+
       return response;
     } else {
       console.error(
