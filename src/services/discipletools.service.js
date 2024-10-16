@@ -51,7 +51,7 @@ export async function sendToDiscipleTools(message) {
       console.log('Emitting message to room:', room);
 
       io.to(room).emit('message', 'new message to download');
-      io.emit('message');
+      // io.emit('message');
 
       return response;
     } else {
