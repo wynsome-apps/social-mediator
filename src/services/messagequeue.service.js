@@ -2,7 +2,7 @@ import { Queue } from 'bullmq';
 
 // Configure the connection to Redis
 export const connection = {
-  host: '127.0.0.1', // Redis host (localhost in this case)
+  host: process.env.REDISURL, // Redis host (localhost in this case)
   port: 6379, // Redis default port
 };
 
