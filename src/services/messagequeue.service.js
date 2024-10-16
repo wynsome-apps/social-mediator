@@ -3,7 +3,7 @@ import { Queue } from 'bullmq';
 // Configure the connection to Redis
 export const connection = {
   host: process.env.REDISURL, // Redis host (localhost in this case)
-  port: 6379, // Redis default port
+  port: process.env.REDISPORT, // Redis default port
 };
 
 export const inboundMQ = new Queue('inbound-messages', { connection });
