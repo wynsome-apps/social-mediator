@@ -110,7 +110,7 @@ export async function sendToFacebook(request) {
   // Send a response to the user on Facebook using the Facebook Send API
   const messageData = {
     recipient: {
-      id: request.recipientID,
+      id: request.recipientid,
     },
     message: {
       text: request.message,

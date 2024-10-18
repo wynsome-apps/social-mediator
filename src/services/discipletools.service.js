@@ -19,7 +19,6 @@ export async function sendToDiscipleTools(message) {
 
   let endpoint = DTEndpointList[message.recipientPageId].endpoint;
   let apiKey = DTEndpointList[message.recipientPageId].apiKey;
-
   if (!endpoint) {
     console.error(
       'No endpoint found for recipient page ID:',
