@@ -15,9 +15,12 @@
     "lint": "npx eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "watch": "nodemon --env-file=.env index.js"
   },
   "dependencies": {
+    "axios": "^1.7.7",
+    "bullmq": "^5.20.0",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
@@ -29,6 +32,7 @@
     "globals": "^15.2.0",
     "husky": ">=6",
     "lint-staged": "^15.2.2",
+    "nodemon": "^3.1.7",
     "prettier": "3.2.5"
   },
   "lint-staged": {
